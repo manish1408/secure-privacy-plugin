@@ -1,0 +1,174 @@
+/* Extra Light */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia ExtraLight Az.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+/* Light */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Light Az.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Regular */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Regular Az.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Italic */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Regular Italic Az.otf")
+    format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Medium */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Medium Az.otf") format("opentype");
+  font-weight: 500;
+  font-style: medium;
+}
+
+/* Medium Italic */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Medium Italic Az.otf")
+    format("opentype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Semi Bold */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Semi Bold Az.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+/*  Bold */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Bold Az.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Black */
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("../fonts/sofia-pro/Sofia Pro Black Az.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+.sp_main_section {
+  background: linear-gradient(89.52deg, #24b04b -46.17%, #0263bc 186.99%);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Sofia Pro", sans-serif;
+}
+.sp_main {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sp_main-div {
+  width: 1240px;
+  background-color: white;
+  border-radius: 28px;
+}
+.section-image {
+  width: 100%;
+}
+
+/* Sign in */
+.input-field {
+  border: 1px solid #d0daea !important;
+  border-radius: 8px !important;
+  background: none !important;
+  padding: 10px 14px !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}
+.input-field::placeholder {
+  color: #1c1c1c !important;
+  font-size: 16px !important;
+  font-weight: 300 !important;
+  opacity: 40% !important;
+}
+
+h1 {
+  margin: 20px 0px;
+  font-weight: 400;
+  font-size: 32px;
+}
+.section-2 {
+  margin-top: 120px;
+  span {
+    color: #ff0000;
+  }
+}
+label {
+  font-weight: 300;
+  font-size: 16px;
+  color: #011949;
+  line-height: 16px;
+  opacity: 50%;
+  margin-bottom: 8px;
+}
+.btn-sp {
+  padding: 15px 32px;
+  margin-top: 30px;
+  width: 100%;
+  background: linear-gradient(269.4deg, #fb5f47 38.27%, #f9be5a 113.07%);
+  border-radius: 20px 4px;
+  border: none;
+  font-family: Sofia Pro;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+}
+.btn-sp span:first-child {
+  color: white;
+}
+form > p:last-child {
+  font-size: 16px;
+}
+.sign-span {
+  font-weight: 600 !important;
+  color: #07806d !important;
+  cursor: pointer;
+}
+
+.section-1 {
+  background: #eaedf2;
+  border-radius: 28px;
+  margin: 0px !important;
+  padding: 20px 0px 0px 0px !important;
+}
+@media (max-width: 767px) {
+  .section-2 {
+    margin-top: 0px;
+    padding: 0px 20px !important;
+  }
+
+  .main {
+    height: auto;
+  }
+}
