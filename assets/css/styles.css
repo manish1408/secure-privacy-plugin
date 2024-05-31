@@ -172,3 +172,50 @@ form > p:last-child {
     height: auto;
   }
 }
+
+.hidden-section {
+  position: relative;
+  z-index: -999999999999999999;
+}
+
+/* .section-2 span {
+  color: #ff0000;
+}
+.section-2 p {
+  font-size: 14px;
+  width: 250px;
+  color: #011949;
+  opacity: 64%;
+}
+.section-2 h2 {
+  font-size: 20px;
+  font-weight: 400;
+  color: #011949;
+} */
+.success-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 50px;
+}
+.success-section h2 {
+  font-size: 28px !important;
+  font-weight: 400 !important;
+  text-align: center;
+}
+.cta .btn-sp {
+  opacity: 100% !important;
+}
+
+.cta .btn-deactive {
+  border: 1px solid #011949;
+  border-radius: 20px 4px;
+  padding: 15px 32px !important;
+  font-family: Sofia Pro;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 30px;
+  margin-right: 20px;
+}

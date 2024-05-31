@@ -193,11 +193,26 @@
               />
               <select id="domain-select" class="input-field mb-3" style="max-width: 100%;"></select>
             </div>
-            <button class="btn btn-sp mb-3" type="submit">
+            <button class="btn btn-sp mb-3" type="button" id="connect-domain">
               CONNECT DOMAIN
             </button>
           </form>
         </section>
+        <section
+        class="success-section" id="success-section" style="display:none"
+     
+      >
+        
+        <img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . '/assets/icon/check-circle.svg'; ?>" style="height: 64px" />
+        <h2 class="mt-4">
+          Secure Privacy is successfully integrated on your Wordpress Site
+        </h2>
+        <div class="d-flex justify-content-between w-100 cta">
+          <button class="btn btn-deactive">DEACTIVE</button>
+
+          <button class="btn btn-sp">CHANGE SETTINGS</button>
+        </div>
+      </section>
       
       </div>
     </div>
@@ -219,10 +234,7 @@
 
 
 
-<div class="wrap">
-	<a target="_blank" href="<?php echo esc_url( "https://support.secureprivacy.ai/support/home" ); ?>"><img src="https://images.prismic.io/secure-privacy/fea99b28-ad05-4398-8531-1b4178f1f9e6_logo.svg"/></a>
-
-  <hr />
+<div class="wrap hidden-section">
   <div id="poststuff">
   <div id="post-body" class="metabox-holder columns-2">
     <div id="post-body-content">
@@ -232,12 +244,8 @@
 
             <?php settings_fields( 'secure-privacy-plugin' ); ?>
 
-            <h3 class="shfs-labels" for="secureprivacy_insert_header">Enter the script code from Secure Privacy.</h3>
-            <p><?php esc_html_e( 'You can find the script code on the installation page.', 'secure-privacy-plugin'); ?></p>
             <textarea style="width:98%;font-family:monospace;" rows="2" cols="1" id="insert_header" name="secureprivacy_insert_header"><?php echo esc_html( get_option( 'secureprivacy_insert_header' ) ); ?></textarea>
-            <input style="width:98%;font-family:monospace;" type="text" id="hidden-token-auth_token" name="secureprivacy_insert_auth_token" <?php echo esc_html( get_option( 'secureprivacy_insert_auth_token' ) ); ?>/>
-            <input style="width:98%;font-family:monospace;" type="text" id="hidden-token-refresh_token" name="secureprivacy_insert_refresh_token" <?php echo esc_html( get_option( 'secureprivacy_insert_refresh_token' ) ); ?>/>
-            <input style="width:98%;font-family:monospace;" type="text" value="<?php echo \esc_html( \get_option( 'secureprivacy_header_priority', -99999999999999999999999999999 ) ); ?>" name="secureprivacy_header_priority" id="secureprivacy_header_priority" style="width:6em;" /> 
+            <input style="width:98%;font-family:monospace;" type="hidden" value="<?php echo \esc_html( \get_option( 'secureprivacy_header_priority', -99999999999999999999999999999 ) ); ?>" name="secureprivacy_header_priority" id="secureprivacy_header_priority" style="width:6em;" /> 
 
           <p class="submit">
             <input class="button button-primary" type="submit" name="Submit" id="sp_save-btn" value="<?php esc_html_e( 'Save', 'secure-privacy-plugin'); ?>" />
@@ -248,7 +256,7 @@
     </div>
     </div>
 
-    <?php require_once(SECUREPRIVACY_PLUGIN_DIR . '/inc/sidebar.php'); ?>
+
     </div>
   </div>
 </div>

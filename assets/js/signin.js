@@ -1,5 +1,7 @@
 (function ($) {
   $(document).ready(function () {
+    let scriptText = "";
+
     $("#show-signup").click(function () {
       $("#signin-section").hide();
       $("#signup-section").show();
@@ -174,82 +176,100 @@
         },
       });
     });
-  });
-  function getDomains() {
-    const apiKey = localStorage.getItem("ApiKey");
-    if (!apiKey) {
-      console.error("ApiKey not found in local storage");
-      return;
+
+    function getDomains() {
+      const apiKey = localStorage.getItem("ApiKey");
+      if (!apiKey) {
+        console.error("ApiKey not found in local storage");
+        return;
+      }
+      $.ajax({
+        url: "https://api-prod.secureprivacy.ai/api/Domain?pageNumber=1&resultsPerPage=999999999",
+        method: "GET",
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + apiKey,
+        },
+        success: function (response) {
+          if (response.PagedResults.length > 0) {
+            $("#domain-label").show();
+            $("#input-label").hide();
+            $("#domain-select").show();
+            $("#domain-input").hide();
+            $("#domain-select").empty();
+
+            $.each(response.PagedResults, function (index, domain) {
+              $("#domain-select").append(
+                $("<option>").val(domain.Id).text(domain.Url)
+              );
+            });
+            scriptText = `<script src="https://app.secureprivacy.ai/script/${response.PagedResults[0].Id}.js"></script>`;
+          } else {
+            $("#domain-label").hide();
+            $("#input-label").show();
+            $("#domain-select").hide();
+            $("#domain-input").show();
+            $("#domain-input").val(location.origin);
+            $("#domain-input").prop("disabled", true);
+          }
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
     }
-    $.ajax({
-      url: "https://api-prod.secureprivacy.ai/api/Domain?pageNumber=1&resultsPerPage=999999999",
-      method: "GET",
-      contentType: "application/json",
-      headers: {
-        Authorization: "Bearer " + apiKey,
-      },
-      success: function (response) {
-        if (response.PagedResults.length > 0) {
-          $("#domain-label").show();
-          $("#input-label").hide();
-          $("#domain-select").show();
-          $("#domain-input").hide();
-          $("#domain-select").empty();
-          $.each(response.PagedResults, function (index, domain) {
-            $("#domain-select").append(
-              $("<option>").val(domain.Url).text(domain.Url)
-            );
-          });
-        } else {
-          $("#domain-label").hide();
-          $("#input-label").show();
-          $("#domain-select").hide();
-          $("#domain-input").show();
-          $("#domain-input").val(location.origin);
-          $("#domain-input").prop("disabled", true);
-        }
-      },
-      error: function (error) {
-        console.error("Error:", error);
-      },
+
+    $("#connect-domain-form").submit(function (e) {
+      e.preventDefault();
+
+      const selectedDomain =
+        $("#domain-select").val() || $("#domain-input").val();
+      console.log(selectedDomain);
+      if (!selectedDomain) {
+        console.error("No domain selected or entered");
+        return;
+      }
+      const apiKey = localStorage.getItem("ApiKey");
+      if (!apiKey) {
+        console.error("ApiKey not found in local storage");
+        return;
+      }
+
+      $.ajax({
+        url: "https://api-prod.secureprivacy.ai/api/Domain",
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + apiKey,
+        },
+        data: JSON.stringify({
+          blocking: "AutomaticV2",
+          collectedData: null,
+          domain: domain,
+        }),
+        success: function (response) {
+          console.log("Domain connected successfully:", response);
+        },
+        error: function (error) {
+          console.error("Error connecting domain:", error);
+        },
+      });
     });
-  }
 
-  $("#connect-domain-form").submit(function (e) {
-    e.preventDefault();
-    alert("Hello!");
-    console.log("here");
-    const selectedDomain =
-      $("#domain-select").val() || $("#domain-input").val();
-    console.log(selectedDomain);
-    if (!selectedDomain) {
-      console.error("No domain selected or entered");
-      return;
-    }
-    const apiKey = localStorage.getItem("ApiKey");
-    if (!apiKey) {
-      console.error("ApiKey not found in local storage");
-      return;
-    }
-
-    $.ajax({
-      url: "https://api-prod.secureprivacy.ai/api/Domain",
-      method: "POST",
-      contentType: "application/json",
-      headers: {
-        Authorization: "Bearer " + apiKey,
-      },
-      data: JSON.stringify({
-        blocking: "AutomaticV2",
-        collectedData: null,
-        domain: domain,
-      }),
-      success: function (response) {
-        console.log("Domain connected successfully:", response);
-      },
-      error: function (error) {
-        console.error("Error connecting domain:", error);
-      },
+    $("#domain-select").on("change", function () {
+      let selectedId = $(this).val();
+      scriptText = `<script src="https://app.secureprivacy.ai/script/${selectedId}.js"></script>`;
+    });
+    $("#connect-domain").click(function () {
+      $("#insert_header").val(scriptText);
+      if (scriptText !== "") {
+        $("#sp_save-btn").trigger("click");
+      }
+    });
+    $("#sp_save-btn").on("click", function (e) {
+      e.preventDefault();
+      $("#domain-section").hide();
+      $("#success-section").show();
     });
   });
 })(jQuery);
