@@ -39,11 +39,10 @@ if ( !class_exists( 'SecurePrivacyPlugin' ) ) {
 	class SecurePrivacyPlugin {
 
 		function __construct() {
-			add_action( 'admin_init', 'bootstrap-css' );
-			add_action( 'admin_init', 'style-css');
-			add_action( 'admin_init', 'bootstrap-js' );
-			add_action( 'admin_init', 'jquery');
-			add_action( 'admin_init', 'signin-js' );
+			// add_action( 'admin_init', 'style-css');
+			// add_action( 'admin_init', 'bootstrap-js' );
+			// add_action( 'admin_init', 'jquery');
+			// add_action( 'admin_init', 'signin-js' );
 			add_action( 'init', array( &$this, 'init' ) );
 			add_action( 'admin_init', array( &$this, 'admin_init' ) );
 			add_action( 'admin_menu', array( &$this, 'admin_menu' ) );

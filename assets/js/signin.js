@@ -1,6 +1,7 @@
 (function ($) {
   $(document).ready(function () {
     let scriptText = "";
+    const apiURL = "https://api-prod.secureprivacy.ai/";
 
     $("#show-signup").click(function () {
       $("#signin-section").hide();
@@ -15,6 +16,12 @@
       $("#signin-title").show();
       $("#signup-title").hide();
     });
+
+    if($("#insert_header").val().includes('https://app.secureprivacy.ai/script')){
+      $("#success-section").show();
+    } else {
+      $("#signin-section").show();
+    }
 
     function showLoading() {
       $("#signin-text").hide();
@@ -54,7 +61,7 @@
       console.log(data);
 
       $.ajax({
-        url: "https://api-prod.secureprivacy.ai/api/auth/login",
+        url: `${apiURL}/api/auth/login`,
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify(data),
@@ -153,7 +160,7 @@
       console.log(data);
 
       $.ajax({
-        url: "https://api-prod.secureprivacy.ai/api/onboarding/register",
+        url: `${apiURL}/api/onboarding/register`,
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify(data),
@@ -184,7 +191,7 @@
         return;
       }
       $.ajax({
-        url: "https://api-prod.secureprivacy.ai/api/Domain?pageNumber=1&resultsPerPage=999999999",
+        url: `${apiURL}/api/Domain?pageNumber=1&resultsPerPage=999999999`,
         method: "GET",
         contentType: "application/json",
         headers: {
@@ -236,7 +243,7 @@
       }
 
       $.ajax({
-        url: "https://api-prod.secureprivacy.ai/api/Domain",
+        url: `${apiURL}/api/Domain`,
         method: "POST",
         contentType: "application/json",
         headers: {
@@ -262,14 +269,27 @@
     });
     $("#connect-domain").click(function () {
       $("#insert_header").val(scriptText);
-      if (scriptText !== "") {
-        $("#sp_save-btn").trigger("click");
-      }
+      $("#sp_saveScript_form").click();
     });
+
+
     $("#sp_save-btn").on("click", function (e) {
       e.preventDefault();
       $("#domain-section").hide();
       $("#success-section").show();
     });
+
+    $("#sp_deactivate_plugin").on("click", function (e) {
+      e.preventDefault();
+      $("#success-section").hide();
+      $("#insert_header").val('');
+      $("#sp_saveScript_form").click();
+
+    });
+
+    $("#sp_change_settings").on("click", function (e) {
+      e.preventDefault();
+    });
+
   });
 })(jQuery);

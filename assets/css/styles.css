@@ -75,10 +75,11 @@
   background: linear-gradient(89.52deg, #24b04b -46.17%, #0263bc 186.99%);
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100%;
+  width: calc(100% + 21px);
   overflow-x: hidden;
   font-family: "Sofia Pro", sans-serif;
+  left: -21px;
+  position: relative;
 }
 .sp_main {
   height: 100vh;
