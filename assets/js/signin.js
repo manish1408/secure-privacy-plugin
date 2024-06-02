@@ -1,7 +1,8 @@
 (function ($) {
   $(document).ready(function () {
     let scriptText = "";
-    const apiURL = "https://api-prod.secureprivacy.ai/";
+    // const apiURL = "https://api-prod.secureprivacy.ai";
+    const apiURL = "https://test.secureprivacy.ai";
 
     $("#show-signup").click(function () {
       $("#signin-section").hide();
@@ -148,15 +149,21 @@
       let numberOfEmployees = $("#reg-employee-select").val();
 
       let data = {
-        firstName,
-        lastName,
-        businessEmail,
-        password,
-        confirmPassword,
-        position,
-        companyName,
-        numberOfEmployees,
-      };
+        "isV2": true,
+        "countryCode": "AS",
+        "planId": null,
+        "currency": null,
+        "interval": null,
+        "firstName": firstName,
+        "lastName": lastName,
+        "businessEmail": businessEmail,
+        "companyName": companyName,
+        "position": position,
+        "numberOfEmployees": numberOfEmployees,
+        "password": password,
+        "confirmPassword": confirmPassword,
+        "domains": [window.location.hostname]
+      }
       console.log(data);
 
       $.ajax({
