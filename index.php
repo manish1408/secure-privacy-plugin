@@ -85,7 +85,8 @@ if ( !class_exists( 'SecurePrivacyPlugin' ) ) {
 			wp_register_script('jquery', plugins_url('/assets/js/jquery-3.7.1.min.js',__FILE__ ));
             wp_enqueue_script('jquery');
 			
-            wp_register_script('signin-js', plugins_url('/assets/js/signin.js',__FILE__ ));
+ 
+			wp_register_script('signin-js', plugins_url('/assets/js/signin.js',__FILE__ ));
             wp_enqueue_script('signin-js');
 
 

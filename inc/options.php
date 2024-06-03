@@ -70,9 +70,19 @@
 
 
         <section id="signup-section" style="display:none">
-          <h1>Create Account</h1>
+          <h1 id="signup-form-title">Create Account</h1>
         
-          <form id='sigup-form'>
+          <form id='signup-form' style="display:none">
+          <div class="d-flex flex-column">
+              <label>Your domain <span> * </span></label>
+              <input
+                type="text"
+                placeholder="yourwebsite.com"
+                class="input-field mb-3"
+                name="reg-domain"
+                id="reg-domain"
+              />
+            </div>
             <div class="d-flex justify-content-between gap-2">
               <div class="d-flex flex-column fname w-100">
                 <label>First name<span> * </span></label>
@@ -105,7 +115,8 @@
                 id="reg-email"
               />
             </div>
-            <div class="d-flex flex-column">
+            <div class="d-flex justify-content-between gap-2">
+            <div class="d-flex flex-column w-100">
               <label>Password <span> * </span></label>
               <input
                 type="password"
@@ -115,7 +126,7 @@
                 id="reg-password"
               />
             </div>
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column w-100">
               <label>Confirm password <span> * </span></label>
               <input
                 type="password"
@@ -126,6 +137,22 @@
               />
               <span id="password-mismatch" style="color: red; display: none;">Password do not match</span>
             </div>
+          </div>
+           
+            <button class="btn btn-sp mb-3" id="next-button" disabled>
+
+            <span id="signup-text">NEXT</span>
+         
+         <div class="spinner-border spinner-border-sm text-white" role="status" id="loader" style="display: none;">
+           <span class="visually-hidden">Loading...</span>
+         </div>
+            </button>
+            <p class="text-center">
+              Already have an account?
+              <span class="sign-span" id="show-signin">Sign In Now</span>
+            </p>
+        </form> 
+          <form id="signup-section-next" style="display:none">
             <div class="d-flex justify-content-between gap-2">
               <div class="d-flex flex-column fname w-100">
                 <label>Your position<span> * </span></label>
@@ -148,20 +175,34 @@
                 />
               </div>
             </div>
-            
-              <div class="d-flex flex-column fname w-100">
-                <label>Number of employees<span> * </span></label>
-                <select id="reg-employee-select" class="input-field mb-3" style="max-width: 100%;">
-              <option value="1-200">1 - 200</option>
-              <option value="201-5000">201 - 5000</option>
-              <option value=">5000"> >5000</option>
-              
+            <div class="d-flex justify-content-between gap-2">
+           
+            <div class="d-flex flex-column fname w-50">
+              <label>Number of employees<span> * </span></label>
+              <select id="reg-employee-select" class="input-field mb-3" style="max-width: 100%;">
+              <option value="">Select from the list</option>
+                <option value="1-200">1 - 200</option>
+                <option value="201-5000">201 - 5000</option>
+                <option value=">5000"> >5000</option>
               </select>
-         
-             
             </div>
+            <div class="d-flex flex-column fname w-50">
+            <label>Company HQ country<span> * </span></label>
+            <select id="country-select" class="input-field mb-3" >
+            <option value="">Select from the list</option>
+            </select>
+</div>
+</div>
+            <div class="d-flex justify-content-between gap-2">
+              <div class="d-flex flex-column cta w-100">
+          <button class="btn btn-deactive mb-3" id="signup-back-button">
 
-            <button class="btn btn-sp mb-3" id="signup-button" disabled>
+            <span id="signup-text">BACK</span>
+      
+            </button>
+</div>
+<div class="d-flex flex-column fname w-100">
+          <button class="btn btn-sp mb-3" id="signup-button" disabled>
 
             <span id="signup-text">SIGN UP</span>
          
@@ -169,15 +210,29 @@
            <span class="visually-hidden">Loading...</span>
          </div>
             </button>
-            <p class="text-center">
-              Already have an account?
-              <span class="sign-span" id="show-signin">Sign In Now</span>
-            </p>
+</div>
+</div>
           </form>
         
         </section>
+
+        <!-- Verify email -->
+      <section id='verify-msg' class='validate-section' style='display:none'>
+        <h1>Validate account</h1>
+        <div>
+          We have sent a verification link to <span id='v-email'></span> Please check your inbox.
+          <br/>
+          If you didn't receive a verification link, <span class='span-click' id='resend-email'>click here</span> to resend.
+          <br/>
+          If you want to change your email address, <span class='span-click' id='change-email'>click here</span> to change your email.
+        </div>
+        <button class="btn btn-sp mb-3" id="verify-msg-btn">
+          <span id="signup-text"> BACK TO SIGN IN</span>
+        </button>
+      </section>
+
         <!-- Domain -->
-        <section id="domain-section" style="display:none">
+        <section id="domain-section" style="display:none" >
         <h1>Add Your <span style="color: #07806d">Domain</span></h1>
           <form id="connect-domain-form">
             <div class="d-flex flex-column" >
@@ -194,6 +249,7 @@
               />
               <select id="domain-select" class="input-field mb-3" style="max-width: 100%;"></select>
             </div>
+            
             <button class="btn btn-sp mb-3" type="button" id="connect-domain">
               CONNECT DOMAIN
             </button>

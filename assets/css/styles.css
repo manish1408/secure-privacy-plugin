@@ -220,3 +220,12 @@ form > p:last-child {
   margin-top: 30px;
   margin-right: 20px;
 }
+
+.validate-section span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+.validate-section .span-click {
+  cursor: pointer;
+}
