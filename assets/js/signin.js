@@ -44,8 +44,17 @@
       $("#signup-form").show();
       $("#signup-form-title").show();
     });
+    $("#add-new-domain").click(function () {
+      $("#domain-section").hide();
+      $("#new-domain-section").show();
+    });
+
     $("#resend-email").click(function () {
       $("#signup-section-next").submit();
+    });
+    $("#new-domain-back").click(function () {
+      $("#new-domain-section").hide();
+      $("#signin-section").show();
     });
 
     if (
@@ -58,6 +67,7 @@
 
     function showLoading() {
       $("#signin-text").hide();
+
       $("#loader").show();
     }
 
@@ -100,15 +110,17 @@
         data: JSON.stringify(data),
         success: function (response) {
           hideLoading();
-          $("#signin-section").hide();
-          $("#domain-section").show();
-          console.log(response);
-          if (response) {
+          if (response.ApiKey && response.RefreshToken) {
+            $("#login-err").hide();
+            $("#signin-section").hide();
+            $("#domain-section").show();
             localStorage.setItem("ApiKey", response.ApiKey);
             localStorage.setItem("RefreshToken", response.RefreshToken);
             getDomains();
           } else {
-            console.error("Token not found in response");
+            $("#login-err").show();
+            $("#login-err").text(response.ResponseStatus.Message);
+            console.error(response.ResponseStatus.Message);
           }
         },
         error: function (error) {
@@ -161,9 +173,55 @@
         $("#signup-button").prop("disabled", true);
       }
     }
-
+    $("#reg-email").on("blur", function () {
+      const email = $("reg-email").val();
+      $("#email-loader").show();
+      $.ajax({
+        url: `${apiURL}/api/AdminUser/ValidateEnterpriseEmail`,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(email),
+        success: function (response) {
+          $("#email-loader").hide();
+          console.log(response);
+          if (!response.IsValid) {
+            $("#next-button").prop("disabled", true);
+            $("#email-err").show();
+            $("#email-err").text("Email is not valid");
+            return;
+          } else if (!response.IsFreeEmail) {
+            $("#next-button").prop("disabled", true);
+            $("#email-err").show();
+            $("#email-err").text("Use business email");
+            return;
+          } else if (!response.IsDisposableEmail) {
+            $("#next-button").prop("disabled", true);
+            $("#email-err").show();
+            $("#email-err").text(" Disposable emails are not allowed");
+            return;
+          } else if (!response.IsAlias) {
+            $("#next-button").prop("disabled", true);
+            $("#email-err").show();
+            $("#email-err").text(" Alias email are not allowed");
+            return;
+          } else if (!response.IsTaken) {
+            $("#next-button").prop("disabled", true);
+            $("#email-err").show();
+            $("#email-err").text("Email already taken");
+            return;
+          } else {
+            $("#next-button").prop("disabled", false);
+            $("#email-err").hide();
+          }
+        },
+        error: function (error) {
+          $("#email-loader").hide();
+          console.error("Error:", error);
+        },
+      });
+    });
     $(
-      "#reg-domain,#reg-firstName,#reg-lastName,#reg-email, #reg-password,#reg-cnfPassword"
+      "#reg-domain,#reg-firstName,#reg-lastName,#reg-email,#reg-password,#reg-cnfPassword"
     ).on("input", function () {
       checkRegValidation();
     });
@@ -195,7 +253,9 @@
     });
     $("#signup-section-next").submit(function (e) {
       e.preventDefault();
-      showLoading();
+      // showLoading();
+      $("#reg-text").hide();
+      $("#signup-loader").show();
       let firstName = $("#reg-firstName").val();
       let lastName = $("#reg-lastName").val();
       let businessEmail = $("#reg-email").val();
@@ -231,21 +291,87 @@
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (response) {
-          hideLoading();
-          $("#v-email").text(businessEmail);
-          $("#signup-section-next").hide();
-          $("#verify-msg").show();
-          // console.log(response);
-          // if (response) {
-          //   localStorage.setItem("ApiKey", response.ApiKey);
-          //   localStorage.setItem("RefreshToken", response.RefreshToken);
-          //   getDomains();
-          // } else {
-          //   console.error("Token not found in response");
-          // }
+          $("#reg-text").show();
+          $("#signup-loader").hide();
+
+          console.log(response);
+          if (response.ResponseStatus.ErrorCode) {
+            $("#signup-err").show();
+            $("#signup-err").text(response.ResponseStatus.Message);
+          } else {
+            $("#signup-err").hide();
+            $("#v-email").text(businessEmail);
+            $("#signup-section-next").hide();
+            $("#verify-msg").show();
+          }
         },
         error: function (error) {
-          hideLoading();
+          $("#reg-text").show();
+          $("#signup-loader").hide();
+          console.error("Error:", error);
+        },
+      });
+    });
+
+    $("#new-domain-input").on("input", function () {
+      let domain = $("#new-domain-input").val();
+
+      if (domain !== "") {
+        $("#add-domain-btn").prop("disabled", false);
+      } else {
+        $("#add-domain-btn").prop("disabled", true);
+      }
+    });
+
+    $("#new-domain-form").submit(function (e) {
+      e.preventDefault();
+      const apiKey = localStorage.getItem("ApiKey");
+      if (!apiKey) {
+        console.error("ApiKey not found in local storage");
+        return;
+      }
+      $("#add-domain-text").hide();
+      $("#add-domain-loader").show();
+
+      let domain = $("#new-domain-input").val();
+      let data = {
+        domain,
+        name: null,
+        blocking: "AutomaticV2",
+        websiteQuestions: null,
+        collectedData: null,
+        informationCollected: null,
+        enableGCM: null,
+        tags: null,
+      };
+      console.log(data);
+
+      $.ajax({
+        url: `${apiURL}/api/Domain`,
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + apiKey,
+        },
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+          $("#add-domain-text").show();
+          $("#add-domain-loader").hide();
+
+          console.log(response);
+          if (response?.ResponseStatus?.ErrorCode) {
+            $("#new-domain-err").show();
+            $("#new-domain-err").text(response.ResponseStatus.Message);
+          } else {
+            $("#new-domain-err").hide();
+            $("#new-domain-section").hide();
+            $("#domain-section").show();
+            getDomains();
+          }
+        },
+        error: function (error) {
+          $("#add-domain-text").show();
+          $("#add-domain-loader").hide();
           console.error("Error:", error);
         },
       });

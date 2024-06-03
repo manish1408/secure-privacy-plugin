@@ -229,3 +229,9 @@ form > p:last-child {
 .validate-section .span-click {
   cursor: pointer;
 }
+
+.email-loader {
+  position: absolute;
+  right: 10px;
+  top: 44px;
+}

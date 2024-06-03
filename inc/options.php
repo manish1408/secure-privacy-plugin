@@ -27,7 +27,7 @@
       <div class="col-sm-12 col-md-5 offset-md-1 d-flex flex-column section-2">
         <!-- Sign In -->
         <section style="display:none" id="signin-section">
-          <h1>Sign In to <span style="color: #07806d">Secure Privacy</span></h1>
+          <h1>Sign in to <span style="color: #07806d">Secure Privacy</span></h1>
 
 
           <form id='sigin-form'>
@@ -52,7 +52,8 @@
               />
              
             </div>
-
+            <p class="text-danger mt-3 mb-0" id='login-err' style='display:hidden;margin-bottom:0'></p>
+            
             <button class="btn btn-sp mb-4" type="submit" id="signin-button" disabled>
             <span id="signin-text">SIGN IN</span>
          
@@ -62,7 +63,7 @@
             </button>
             <p class="text-center">
               Don't have an account?
-              <span class="sign-span" id="show-signup">Sign Up Now</span>
+              <span class="sign-span" id="show-signup">Sign up now</span>
             </p>
           </form>
         
@@ -70,7 +71,7 @@
 
 
         <section id="signup-section" style="display:none">
-          <h1 id="signup-form-title">Create Account</h1>
+          <h1 id="signup-form-title">Create account</h1>
         
           <form id='signup-form' style="display:none">
           <div class="d-flex flex-column">
@@ -105,15 +106,19 @@
                 />
               </div>
             </div>
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column position-relative mb-3">
               <label>Email <span> * </span></label>
               <input
                 type="email"
                 placeholder="Enter your Email"
-                class="input-field mb-3"
+                class="input-field"
                 name="email"
                 id="reg-email"
               />
+              <p class="text-danger mt-1 mb-0" id='email-err' style='display:hidden;margin-bottom:0'></p>
+              <div class="spinner-border spinner-border-sm text-black email-loader" role="status" id="email-loader" style="display:none">
+           <span class="visually-hidden">Loading...</span>
+         </div>
             </div>
             <div class="d-flex justify-content-between gap-2">
             <div class="d-flex flex-column w-100">
@@ -149,7 +154,7 @@
             </button>
             <p class="text-center">
               Already have an account?
-              <span class="sign-span" id="show-signin">Sign In Now</span>
+              <span class="sign-span" id="show-signin">Sign in now</span>
             </p>
         </form> 
           <form id="signup-section-next" style="display:none">
@@ -177,41 +182,35 @@
             </div>
             <div class="d-flex justify-content-between gap-2">
            
-            <div class="d-flex flex-column fname w-50">
-              <label>Number of employees<span> * </span></label>
-              <select id="reg-employee-select" class="input-field mb-3" style="max-width: 100%;">
-              <option value="">Select from the list</option>
-                <option value="1-200">1 - 200</option>
-                <option value="201-5000">201 - 5000</option>
-                <option value=">5000"> >5000</option>
-              </select>
+              <div class="d-flex flex-column fname w-50">
+                <label>Number of employees<span> * </span></label>
+                <select id="reg-employee-select" class="input-field mb-3" style="max-width: 100%;">
+                <option value="">Select from the list</option>
+                  <option value="1-200">1 - 200</option>
+                  <option value="201-5000">201 - 5000</option>
+                  <option value=">5000"> >5000</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column fname w-50">
+                <label>Company HQ country<span> * </span></label>
+                <select id="country-select" class="input-field mb-3" >
+                <option value="">Select from the list</option>
+                </select>
+              </div>
             </div>
-            <div class="d-flex flex-column fname w-50">
-            <label>Company HQ country<span> * </span></label>
-            <select id="country-select" class="input-field mb-3" >
-            <option value="">Select from the list</option>
-            </select>
-</div>
-</div>
+            <p class="text-danger mb-0" id='signup-err' style='display:hidden;margin-bottom:0'></p>
             <div class="d-flex justify-content-between gap-2">
               <div class="d-flex flex-column cta w-100">
-          <button class="btn btn-deactive mb-3" id="signup-back-button">
-
-            <span id="signup-text">BACK</span>
-      
-            </button>
-</div>
-<div class="d-flex flex-column fname w-100">
-          <button class="btn btn-sp mb-3" id="signup-button" disabled>
-
-            <span id="signup-text">SIGN UP</span>
-         
-         <div class="spinner-border spinner-border-sm text-white" role="status" id="loader" style="display: none;">
-           <span class="visually-hidden">Loading...</span>
-         </div>
-            </button>
-</div>
-</div>
+                <button class="btn btn-deactive mb-3" id="signup-back-button"><span>BACK</span></button></div>
+              <div class="d-flex flex-column fname w-100">
+                <button class="btn btn-sp mb-3" id="signup-button" disabled>
+                  <span id="reg-text">SIGN UP</span>
+                  <div class="spinner-border spinner-border-sm text-white" role="status" id="signup-loader" style="display: none;">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </button>
+              </div>
+            </div>
           </form>
         
         </section>
@@ -231,13 +230,13 @@
         </button>
       </section>
 
-        <!-- Domain -->
-        <section id="domain-section" style="display:none" >
-        <h1>Add Your <span style="color: #07806d">Domain</span></h1>
+        <!-- Domain style="display:none" -->
+        <section id="domain-section" style="display:none"  >
+        <h1>Add Your <span style="color: #07806d">domain</span></h1>
           <form id="connect-domain-form">
             <div class="d-flex flex-column" >
-              <label id="input-label" >Your Website <span> * </span></label>
-              <label id="domain-label" style="display:none">Your Domains <span> * </span></label>
+              <label id="input-label" >Your website <span> * </span></label>
+              <label id="domain-label" style="display:none">Your domains <span> * </span></label>
               <input
                 type="text"
                 placeholder="yourwebsite.com"
@@ -253,6 +252,38 @@
             <button class="btn btn-sp mb-3" type="button" id="connect-domain">
               CONNECT DOMAIN
             </button>
+            <p class="text-center">
+              OR <br/>
+              <span class="sign-span" id="add-new-domain">Add new domain</span>
+            </p>
+           
+          </form>
+        </section>
+        <!-- New Domain section -->
+        <section id="new-domain-section" style="display:none">
+        <h1>Add new <span style="color: #07806d">domain</span></h1>
+          <form id="new-domain-form">
+            <div class="d-flex flex-column">      
+              <label >Your domain <span> * </span></label>
+              <input
+                type="text"
+                placeholder="yourwebsite.com"
+                class="input-field mb-3"
+                id='new-domain-input'
+                name="new-domain-input"
+              />
+            </div>
+             <p class="text-danger mb-0" id='new-domain-err' style='display:none;margin-bottom:0'></p>
+           <!-- <p class="text-success mb-0" id='new-domain-success' style='display:none;margin-bottom:0'></p> -->
+            <button class="btn btn-sp mb-3"  id="add-domain-btn" disabled>
+              <span id="add-domain-text">ADD DOMAIN</span>
+              <div class="spinner-border spinner-border-sm text-white" role="status" id="add-domain-loader" style="display: none;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </button>
+            <!-- <p class="text-center" id="new-domain-back" style="display:none">
+              <span class="sign-span" >Back to login</span>
+            </p> -->
           </form>
         </section>
         <section class="success-section" id="success-section" style="display:none">
