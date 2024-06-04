@@ -4,15 +4,17 @@
     // const apiURL = "https://api-prod.secureprivacy.ai";
     const apiURL = "https://test.secureprivacy.ai";
 
-    $("#show-signup").click(function () {
-      $("#reg-domain").val(location.origin);
-      $("#signin-section").hide();
-      $("#signup-section").show();
-      $("#signin-title").hide();
-      $("#signup-title").show();
-      $("#signup-form").show();
-      $("#signup-form-title").show();
-    });
+    function showLoading() {
+      $("#signin-text").hide();
+
+      $("#loader").show();
+    }
+
+    function hideLoading() {
+      $("#loader").hide();
+      $("#signin-text").show();
+    }
+    // Hide Show Starts
 
     $("#show-signin").click(function () {
       $("#signin-section").show();
@@ -57,6 +59,17 @@
       $("#signin-section").show();
     });
 
+    $("#show-signup").click(function () {
+      $("#reg-domain").val(location.origin);
+      $("#signin-section").hide();
+      $("#signup-section").show();
+      $("#signin-title").hide();
+      $("#signup-title").show();
+      $("#signup-form").show();
+      $("#signup-form-title").show();
+    });
+    // Hide Show Ends
+
     if (
       $("#insert_header").val().includes("https://app.secureprivacy.ai/script")
     ) {
@@ -65,17 +78,7 @@
       $("#signin-section").show();
     }
 
-    function showLoading() {
-      $("#signin-text").hide();
-
-      $("#loader").show();
-    }
-
-    function hideLoading() {
-      $("#loader").hide();
-      $("#signin-text").show();
-    }
-
+    // Sign In Starts
     function checkValidation() {
       let email = $("#login-email").val();
       let password = $("#login-password").val();
@@ -129,33 +132,205 @@
         },
       });
     });
-    function checkRegValidation() {
-      let domain = $("#reg-domain").val();
-      let firstName = $("#reg-firstName").val();
-      let lastName = $("#reg-lastName").val();
-      let email = $("#reg-email").val();
-      let password = $("#reg-password").val();
-      let confimPassword = $("#reg-cnfPassword").val();
-      // let position = $("#reg-position").val();
-      // let company = $("#reg-company").val();
-      // let employeeSelect = $("#reg-employee-select").val();
+    // SignIn Ends
 
+    // Register Starts
+    let isDomainValid = false;
+    let isFirstNameValid = false;
+    let isLastNameValid = false;
+    let isEmailValid = false;
+    let isPasswordValid = false;
+    let isConfirmPasswordValid = false;
+    const domainPattern = /^((?!-)[A-Za-z0-9-]{1,63}(?<!-).)+[A-Za-z]{2,6}$/;
+
+    function validateDomain() {
+      const domain = $("#reg-domain").val();
+      const isValid = domainPattern.test(domain);
+
+      $("#domain-err").toggle(!isValid);
+
+      if (isValid) {
+        $("#domain-err").text("");
+        $("#domain-loader").toggle(isValid);
+        // Make the AJAX call
+        $.ajax({
+          url: `${apiURL}/api/Domain/Validate/%7BDomain%7D?domain=${domain}`,
+          type: "GET",
+          contentType: "application/json",
+          success: function (response) {
+            $("#domain-loader").hide();
+            console.log("API response:", response);
+            if (!response) {
+              $("#domain-err").show();
+              $("#domain-err").text(
+                "The provided domain is currently inactive"
+              );
+              isDomainValid = false;
+            } else {
+              isDomainValid = true;
+            }
+            checkRegValidation();
+          },
+          error: function (error) {
+            $("#domain-loader").hide();
+            console.error("API error:", error);
+            isDomainValid = false;
+            checkRegValidation();
+          },
+        });
+      } else {
+        $("#domain-err").text("Please enter a valid domain.");
+        isDomainValid = false;
+      }
+
+      checkRegValidation();
+    }
+
+    function validateEmail() {
+      const email = $("#reg-email").val();
+      $("#email-loader").show();
+      const data = { email: email };
+      $.ajax({
+        url: `${apiURL}/api/AdminUser/ValidateEnterpriseEmail`,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+          $("#email-loader").hide();
+          console.log(response);
+          if (!response.IsValid) {
+            $("#email-err").show();
+            $("#email-err").text("Email is not valid");
+            isEmailValid = false;
+            // return;
+          } else if (!response.IsFreeEmail) {
+            $("#email-err").show();
+            $("#email-err").text("Use business email");
+            isEmailValid = false;
+            // return;
+          } else if (!response.IsDisposableEmail) {
+            $("#email-err").show();
+            $("#email-err").text(" Disposable emails are not allowed");
+            isEmailValid = false;
+            return;
+          } else if (!response.IsAlias) {
+            $("#email-err").show();
+            $("#email-err").text(" Alias email are not allowed");
+            isEmailValid = false;
+            // return;
+          } else if (!response.IsTaken) {
+            $("#email-err").show();
+            $("#email-err").text("Email already taken");
+            isEmailValid = false;
+            // return;
+          } else {
+            $("#email-err").hide();
+            isEmailValid = true;
+            // return true;
+          }
+          checkRegValidation();
+        },
+        error: function (error) {
+          $("#email-loader").hide();
+          isEmailValid = false;
+          checkRegValidation();
+          console.error("Error:", error);
+        },
+      });
+      // return true;
+    }
+
+    function validatePassword() {
+      const password = $("#reg-password").val();
+      const minLength = 8;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumber = /\d/.test(password);
+
+      let errorMessage = "";
+
+      if (password.length < minLength) {
+        isPasswordValid = false;
+
+        errorMessage = "Minimum length for password is 8.";
+      } else if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+        isPasswordValid = false;
+        errorMessage =
+          "Password should contain at least one uppercase letter, one lowercase letter, and one number.";
+      }
+
+      $("#password-err").toggle(!isPasswordValid);
+      $("#password-err").text(errorMessage);
+
+      checkRegValidation();
+    }
+
+    function validateConfirmPassword() {
+      const password = $("#reg-password").val();
+      const confirmPassword = $("#reg-cnfPassword").val();
+      const minLength = 8;
+      const hasUpperCase = /[A-Z]/.test(confirmPassword);
+      const hasLowerCase = /[a-z]/.test(confirmPassword);
+      const hasNumber = /\d/.test(confirmPassword);
+
+      let errorMessage = "";
+
+      if (confirmPassword !== password) {
+        isConfirmPasswordValid = false;
+        errorMessage = "Passwords do not match.";
+      } else if (confirmPassword.length < minLength) {
+        isConfirmPasswordValid = false;
+        errorMessage = "Minimum length for password is 8.";
+      } else if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+        isConfirmPasswordValid = false;
+        errorMessage =
+          "Password should contain at least one uppercase letter, one lowercase letter, and one number.";
+      }
+
+      $("#cnf-password-err").toggle(!isConfirmPasswordValid);
+      $("#cnf-password-err").text(errorMessage);
+
+      checkRegValidation();
+    }
+
+    function validateFirstName() {
+      const firstName = $("#reg-firstName").val();
+      isFirstNameValid = firstName !== "";
+      checkRegValidation();
+    }
+
+    function validateLastName() {
+      const lastName = $("#reg-lastName").val();
+      isLastNameValid = lastName !== "";
+      checkRegValidation();
+    }
+    $("#reg-domain").on("input", validateDomain);
+    $("#reg-email").on("blur", validateEmail);
+    $("#reg-firstName").on("input", validateFirstName);
+    $("#reg-lastName").on("input", validateLastName);
+    $("#reg-password").on("input", validatePassword);
+    $("#reg-cnfPassword").on("input", validateConfirmPassword);
+
+    function checkRegValidation() {
       if (
-        domain !== "" &&
-        firstName !== "" &&
-        lastName !== "" &&
-        email !== "" &&
-        password !== "" &&
-        confimPassword !== ""
-        // position !== "" &&
-        // company !== "" &&
-        // employeeSelect !== ""
+        isDomainValid &&
+        isFirstNameValid &&
+        isLastNameValid &&
+        isEmailValid &&
+        isPasswordValid &&
+        isConfirmPasswordValid
       ) {
         $("#next-button").prop("disabled", false);
       } else {
         $("#next-button").prop("disabled", true);
       }
     }
+
+    $("#employee-select,#reg-company,#reg-position,#country-select").on(
+      "input",
+      checkRegValidationNext
+    );
+
     function checkRegValidationNext() {
       let position = $("#reg-position").val();
       let company = $("#reg-company").val();
@@ -173,84 +348,7 @@
         $("#signup-button").prop("disabled", true);
       }
     }
-    $("#reg-email").on("blur", function () {
-      const email = $("reg-email").val();
-      $("#email-loader").show();
-      $.ajax({
-        url: `${apiURL}/api/AdminUser/ValidateEnterpriseEmail`,
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(email),
-        success: function (response) {
-          $("#email-loader").hide();
-          console.log(response);
-          if (!response.IsValid) {
-            $("#next-button").prop("disabled", true);
-            $("#email-err").show();
-            $("#email-err").text("Email is not valid");
-            return;
-          } else if (!response.IsFreeEmail) {
-            $("#next-button").prop("disabled", true);
-            $("#email-err").show();
-            $("#email-err").text("Use business email");
-            return;
-          } else if (!response.IsDisposableEmail) {
-            $("#next-button").prop("disabled", true);
-            $("#email-err").show();
-            $("#email-err").text(" Disposable emails are not allowed");
-            return;
-          } else if (!response.IsAlias) {
-            $("#next-button").prop("disabled", true);
-            $("#email-err").show();
-            $("#email-err").text(" Alias email are not allowed");
-            return;
-          } else if (!response.IsTaken) {
-            $("#next-button").prop("disabled", true);
-            $("#email-err").show();
-            $("#email-err").text("Email already taken");
-            return;
-          } else {
-            $("#next-button").prop("disabled", false);
-            $("#email-err").hide();
-          }
-        },
-        error: function (error) {
-          $("#email-loader").hide();
-          console.error("Error:", error);
-        },
-      });
-    });
-    $(
-      "#reg-domain,#reg-firstName,#reg-lastName,#reg-email,#reg-password,#reg-cnfPassword"
-    ).on("input", function () {
-      checkRegValidation();
-    });
-    $("#employee-select,#reg-company,#reg-position,#country-select").on(
-      "input",
-      function () {
-        checkRegValidationNext();
-      }
-    );
 
-    function checkPasswordMatch() {
-      let password = $("#reg-password").val();
-      let confirmPassword = $("#reg-cnfPassword").val();
-
-      if (
-        password !== "" &&
-        confirmPassword !== "" &&
-        password !== confirmPassword
-      ) {
-        $("#password-mismatch").show();
-        $("#next-button").prop("disabled", true);
-      } else {
-        $("#password-mismatch").hide();
-        $("#next-button").prop("disabled", false);
-      }
-    }
-    $("#reg-cnfPassword").on("input", function () {
-      checkPasswordMatch();
-    });
     $("#signup-section-next").submit(function (e) {
       e.preventDefault();
       // showLoading();
@@ -312,6 +410,9 @@
         },
       });
     });
+    // Register Ends
+
+    // Add New Domain Starts
 
     $("#new-domain-input").on("input", function () {
       let domain = $("#new-domain-input").val();
@@ -376,6 +477,7 @@
         },
       });
     });
+    // Add New Domain Ends
 
     function getDomains() {
       const apiKey = localStorage.getItem("ApiKey");

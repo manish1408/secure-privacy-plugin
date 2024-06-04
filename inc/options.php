@@ -74,15 +74,19 @@
           <h1 id="signup-form-title">Create account</h1>
         
           <form id='signup-form' style="display:none">
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column position-relative mb-3">
               <label>Your domain <span> * </span></label>
               <input
                 type="text"
                 placeholder="yourwebsite.com"
-                class="input-field mb-3"
+                class="input-field"
                 name="reg-domain"
                 id="reg-domain"
               />
+              <p class="text-danger mt-1 mb-0" id='domain-err' style='display:hidden;margin-bottom:0'></p>
+              <div class="spinner-border spinner-border-sm text-black email-loader" role="status" id="domain-loader" style="display:none">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
             <div class="d-flex justify-content-between gap-2">
               <div class="d-flex flex-column fname w-100">
@@ -117,30 +121,31 @@
               />
               <p class="text-danger mt-1 mb-0" id='email-err' style='display:hidden;margin-bottom:0'></p>
               <div class="spinner-border spinner-border-sm text-black email-loader" role="status" id="email-loader" style="display:none">
-           <span class="visually-hidden">Loading...</span>
-         </div>
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
             <div class="d-flex justify-content-between gap-2">
-            <div class="d-flex flex-column w-100">
+            <div class="d-flex flex-column w-100 mb-3">
               <label>Password <span> * </span></label>
               <input
                 type="password"
                 placeholder="Enter your Password"
-                class="input-field mb-3"
+                class="input-field"
                 name="password"
                 id="reg-password"
               />
+              <p class="text-danger mt-1 mb-0" id="password-err" style="color: red; display: none;"></span>
             </div>
-            <div class="d-flex flex-column w-100">
+            <div class="d-flex flex-column w-100 mb-3">
               <label>Confirm password <span> * </span></label>
               <input
                 type="password"
                 placeholder="Confirm your Password"
-                class="input-field mb-3"
+                class="input-field "
                 name="confirmPassword"
                 id="reg-cnfPassword"
               />
-              <span id="password-mismatch" style="color: red; display: none;">Password do not match</span>
+              <p class="text-danger mt-1 mb-0" id="cnf-password-err" style="color: red; display: none;"></span>
             </div>
           </div>
            
