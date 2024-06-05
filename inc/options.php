@@ -264,21 +264,24 @@
            
           </form>
         </section>
-        <!-- New Domain section -->
+        <!-- New Domain section  -->
         <section id="new-domain-section" style="display:none">
         <h1>Add new <span style="color: #07806d">domain</span></h1>
           <form id="new-domain-form">
-            <div class="d-flex flex-column">      
+            <div class="d-flex flex-column position-relative  mb-3">      
               <label >Your domain <span> * </span></label>
               <input
                 type="text"
                 placeholder="yourwebsite.com"
-                class="input-field mb-3"
+                class="input-field "
                 id='new-domain-input'
                 name="new-domain-input"
               />
+              <p class="text-danger mb-0" id='new-domain-err' style='display:none;margin-bottom:0'></p>
+              <div class="spinner-border spinner-border-sm text-black email-loader" role="status" id="new-domain-loader" style="display:none">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
-             <p class="text-danger mb-0" id='new-domain-err' style='display:none;margin-bottom:0'></p>
            <!-- <p class="text-success mb-0" id='new-domain-success' style='display:none;margin-bottom:0'></p> -->
             <button class="btn btn-sp mb-3"  id="add-domain-btn" disabled>
               <span id="add-domain-text">ADD DOMAIN</span>

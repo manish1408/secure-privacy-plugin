@@ -24,6 +24,15 @@
     });
     $("#signup-form").submit(function (e) {
       e.preventDefault();
+      const email = $("#reg-email").val();
+      var atIndex = email.indexOf("@");
+      var dotIndex = email.indexOf(".", atIndex);
+      var company =
+        atIndex !== -1 && dotIndex !== -1
+          ? email.substring(atIndex + 1, dotIndex)
+          : "";
+      console.log(company);
+      $("#reg-company").val(company);
       $("#signup-form").hide();
       $("#signup-form-title").hide();
       $("#signup-section-next").show();
@@ -141,7 +150,10 @@
     let isEmailValid = false;
     let isPasswordValid = false;
     let isConfirmPasswordValid = false;
-    const domainPattern = /^((?!-)[A-Za-z0-9-]{1,63}(?<!-).)+[A-Za-z]{2,6}$/;
+    const domainPattern =
+      /^(((http|https):\/\/|)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?)$/;
+    const emailPattern =
+      /^(?!.*\.\.)(?!.*\-\-)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     function validateDomain() {
       const domain = $("#reg-domain").val();
@@ -159,7 +171,7 @@
           contentType: "application/json",
           success: function (response) {
             $("#domain-loader").hide();
-            console.log("API response:", response);
+            // console.log("API response:", response);
             if (!response) {
               $("#domain-err").show();
               $("#domain-err").text(
@@ -188,47 +200,59 @@
 
     function validateEmail() {
       const email = $("#reg-email").val();
-      $("#email-loader").show();
-      const data = { email: email };
-      $.ajax({
-        url: `${apiURL}/api/AdminUser/ValidateEnterpriseEmail`,
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(data),
-        success: function (response) {
-          $("#email-loader").hide();
-          console.log(response);
-          if (!response.IsValid) {
-            $("#email-err").show();
-            $("#email-err").text("Email is not valid");
+      const isValid = emailPattern.test(email);
+      $("#email-err").toggle(!isValid);
+
+      if (isValid) {
+        $("#email-err").text("");
+        $("#email-loader").toggle(isValid);
+        const data = { email: email };
+        $.ajax({
+          url: `${apiURL}/api/AdminUser/ValidateEnterpriseEmail`,
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(data),
+          success: function (response) {
+            $("#email-loader").hide();
+            console.log(response);
+            if (response.IsTaken) {
+              $("#email-err").show();
+              $("#email-err").text("Email already taken");
+              isEmailValid = false;
+            } else if (!response.IsValid) {
+              $("#email-err").show();
+              $("#email-err").text("Email is not valid");
+              isEmailValid = false;
+            } else if (response.IsDisposableEmail) {
+              $("#email-err").show();
+              $("#email-err").text(" Disposable emails are not allowed");
+              isEmailValid = false;
+              // return;
+            } else if (response.IsAlias) {
+              $("#email-err").show();
+              $("#email-err").text(" Alias email are not allowed");
+              isEmailValid = false;
+            } else {
+              $("#email-err").hide();
+              isEmailValid = true;
+            }
+
+            checkRegValidation();
+          },
+          error: function (error) {
+            $("#email-loader").hide();
             isEmailValid = false;
-          } else if (response.IsDisposableEmail) {
-            $("#email-err").show();
-            $("#email-err").text(" Disposable emails are not allowed");
-            isEmailValid = false;
-            return;
-          } else if (response.IsAlias) {
-            $("#email-err").show();
-            $("#email-err").text(" Alias email are not allowed");
-            isEmailValid = false;
-          } else if (response.IsTaken) {
-            $("#email-err").show();
-            $("#email-err").text("Email already taken");
-            isEmailValid = false;
-          } else {
-            $("#email-err").hide();
-            isEmailValid = true;
-          }
-          checkRegValidation();
-        },
-        error: function (error) {
-          $("#email-loader").hide();
-          isEmailValid = false;
-          checkRegValidation();
-          console.error("Error:", error);
-        },
-      });
-      // return true;
+            isValid = false;
+            checkRegValidation();
+            console.error("Error:", error);
+          },
+        });
+      } else {
+        $("#email-err").text("Please enter a valid email.");
+        isEmailValid = false;
+      }
+
+      checkRegValidation();
     }
 
     function validatePassword() {
@@ -248,6 +272,8 @@
         isPasswordValid = false;
         errorMessage =
           "Password should contain at least one uppercase letter, one lowercase letter, and one number.";
+      } else {
+        isPasswordValid = true;
       }
 
       $("#password-err").toggle(!isPasswordValid);
@@ -276,6 +302,8 @@
         isConfirmPasswordValid = false;
         errorMessage =
           "Password should contain at least one uppercase letter, one lowercase letter, and one number.";
+      } else {
+        isConfirmPasswordValid = true;
       }
 
       $("#cnf-password-err").toggle(!isConfirmPasswordValid);
@@ -384,14 +412,14 @@
           $("#signup-loader").hide();
 
           console.log(response);
-          if (response.ResponseStatus.ErrorCode) {
-            $("#signup-err").show();
-            $("#signup-err").text(response.ResponseStatus.Message);
-          } else {
+          if (response) {
             $("#signup-err").hide();
             $("#v-email").text(businessEmail);
             $("#signup-section-next").hide();
             $("#verify-msg").show();
+          } else {
+            $("#signup-err").show();
+            $("#signup-err").text(response.ResponseStatus.Message);
           }
         },
         error: function (error) {
@@ -407,10 +435,38 @@
 
     $("#new-domain-input").on("input", function () {
       let domain = $("#new-domain-input").val();
+      const isValid = domainPattern.test(domain);
 
-      if (domain !== "") {
-        $("#add-domain-btn").prop("disabled", false);
+      $("#new-domain-err").toggle(!isValid);
+
+      if (isValid) {
+        $("#new-domain-err").text("");
+        $("#new-domain-loader").show();
+        $.ajax({
+          url: `${apiURL}/api/Domain/Validate/%7BDomain%7D?domain=${domain}`,
+          type: "GET",
+          contentType: "application/json",
+          success: function (response) {
+            $("#new-domain-loader").hide();
+            if (!response) {
+              $("#new-domain-err")
+                .show()
+                .text("The provided domain is currently inactive");
+              $("#add-domain-btn").prop("disabled", true);
+            } else {
+              $("#new-domain-err").hide().text("");
+              $("#add-domain-btn").prop("disabled", false);
+            }
+          },
+          error: function (error) {
+            $("#new-domain-loader").hide();
+            console.error("API error:", error);
+
+            $("#add-domain-btn").prop("disabled", true);
+          },
+        });
       } else {
+        $("#new-domain-err").text("Please enter a valid domain.");
         $("#add-domain-btn").prop("disabled", true);
       }
     });
