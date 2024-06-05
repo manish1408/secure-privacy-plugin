@@ -202,31 +202,22 @@
             $("#email-err").show();
             $("#email-err").text("Email is not valid");
             isEmailValid = false;
-            // return;
-          } else if (!response.IsFreeEmail) {
-            $("#email-err").show();
-            $("#email-err").text("Use business email");
-            isEmailValid = false;
-            // return;
-          } else if (!response.IsDisposableEmail) {
+          } else if (response.IsDisposableEmail) {
             $("#email-err").show();
             $("#email-err").text(" Disposable emails are not allowed");
             isEmailValid = false;
             return;
-          } else if (!response.IsAlias) {
+          } else if (response.IsAlias) {
             $("#email-err").show();
             $("#email-err").text(" Alias email are not allowed");
             isEmailValid = false;
-            // return;
-          } else if (!response.IsTaken) {
+          } else if (response.IsTaken) {
             $("#email-err").show();
             $("#email-err").text("Email already taken");
             isEmailValid = false;
-            // return;
           } else {
             $("#email-err").hide();
             isEmailValid = true;
-            // return true;
           }
           checkRegValidation();
         },
