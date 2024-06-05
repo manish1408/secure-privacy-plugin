@@ -89,25 +89,27 @@
               </div>
             </div>
             <div class="d-flex justify-content-between gap-2">
-              <div class="d-flex flex-column fname w-100">
+              <div class="d-flex flex-column fname w-100 mb-3">
                 <label>First name<span> * </span></label>
                 <input
                   type="text"
                   placeholder="First Name"
-                  class="input-field mb-3"
+                  class="input-field"
                   name="firstName"
                   id="reg-firstName"
                 />
+                <p class="text-danger mt-1 mb-0" id='firstName-err' style='display:hidden;margin-bottom:0'></p>
               </div>
-              <div class="d-flex flex-column w-100">
+              <div class="d-flex flex-column w-100 mb-3">
                 <label>Last name<span> * </span></label>
                 <input
                   type="text"
                   placeholder="Last Name"
-                  class="input-field mb-3"
+                  class="input-field "
                   name="lastName"
                   id="reg-lastName"
                 />
+                <p class="text-danger mt-1 mb-0" id='lastName-err' style='display:hidden;margin-bottom:0'></p>
               </div>
             </div>
             <div class="d-flex flex-column position-relative mb-3">
@@ -149,7 +151,7 @@
             </div>
           </div>
            
-            <button class="btn btn-sp mb-3" id="next-button" disabled>
+            <button class="btn btn-sp mb-3" id="next-button">
 
             <span id="signup-text">NEXT</span>
          
@@ -164,43 +166,50 @@
         </form> 
           <form id="signup-section-next" style="display:none">
             <div class="d-flex justify-content-between gap-2">
-              <div class="d-flex flex-column fname w-100">
+              <div class="d-flex flex-column fname w-100 mb-3">
                 <label>Your position<span> * </span></label>
                 <input
                   type="text"
                   placeholder="Your position"
-                  class="input-field mb-3"
+                  class="input-field"
                   name="position"
                   id="reg-position"
                 />
+                <p class="text-danger mt-1 mb-0" id='position-err' style='display:hidden;margin-bottom:0'></p>
               </div>
-              <div class="d-flex flex-column w-100">
+              <div class="d-flex flex-column w-100 mb-3">
                 <label>Your company<span> * </span></label>
                 <input
                   type="text"
                   placeholder="Your company"
-                  class="input-field mb-3"
+                  class="input-field"
                   name="company"
                   id="reg-company"
                 />
+                <p class="text-danger mt-1 mb-0" id='company-err' style='display:hidden;margin-bottom:0'></p>
+
               </div>
             </div>
             <div class="d-flex justify-content-between gap-2">
            
-              <div class="d-flex flex-column fname w-50">
+              <div class="d-flex flex-column fname w-50 mb-3">
                 <label>Number of employees<span> * </span></label>
-                <select id="reg-employee-select" class="input-field mb-3" style="max-width: 100%;">
+                <select id="reg-employee-select" class="input-field" style="max-width: 100%;">
                 <option value="">Select from the list</option>
                   <option value="1-200">1 - 200</option>
                   <option value="201-5000">201 - 5000</option>
                   <option value=">5000"> >5000</option>
                 </select>
+                <p class="text-danger mt-1 mb-0" id='employees-err' style='display:hidden;margin-bottom:0'></p>
+
               </div>
-              <div class="d-flex flex-column fname w-50">
+              <div class="d-flex flex-column fname w-50 mb-3">
                 <label>Company HQ country<span> * </span></label>
-                <select id="country-select" class="input-field mb-3" >
+                <select id="country-select" class="input-field" >
                 <option value="">Select from the list</option>
                 </select>
+                <p class="text-danger mt-1 mb-0" id='country-err' style='display:hidden;margin-bottom:0'></p>
+
               </div>
             </div>
             <p class="text-danger mb-0" id='signup-err' style='display:hidden;margin-bottom:0'></p>
@@ -208,7 +217,7 @@
               <div class="d-flex flex-column cta w-100">
                 <button class="btn btn-deactive mb-3" id="signup-back-button"><span>BACK</span></button></div>
               <div class="d-flex flex-column fname w-100">
-                <button class="btn btn-sp mb-3" id="signup-button" disabled>
+                <button class="btn btn-sp mb-3" id="signup-button">
                   <span id="reg-text">SIGN UP</span>
                   <div class="spinner-border spinner-border-sm text-white" role="status" id="signup-loader" style="display: none;">
                     <span class="visually-hidden">Loading...</span>
