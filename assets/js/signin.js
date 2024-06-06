@@ -4,6 +4,8 @@
     // const apiURL = "https://api-prod.secureprivacy.ai";
     const apiURL = "https://test.secureprivacy.ai";
 
+    const scriptURL = "https://frontend-test.secureprivacy.ai/script";
+
     function showLoading() {
       $("#signin-text").hide();
 
@@ -66,7 +68,7 @@
     // Hide Show Ends
 
     if (
-      $("#insert_header").val().includes("https://app.secureprivacy.ai/script")
+      $("#insert_header").val().includes(`${scriptURL}`)
     ) {
       $("#success-section").show();
     } else {
@@ -157,7 +159,6 @@
           contentType: "application/json",
           success: function (response) {
             $("#domain-loader").hide();
-            // console.log("API response:", response);
             if (!response) {
               $("#domain-err").show();
               $("#domain-err").text(
@@ -181,8 +182,8 @@
         isDomainValid = false;
       }
 
-      // checkRegValidation();
     }
+
 
     function validateEmail() {
       const email = $("#reg-email").val();
@@ -585,6 +586,9 @@
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (response) {
+          debugger;
+          let domainId = response.Id;
+          assignDomain(domainId);
           $("#add-domain-text").show();
           $("#add-domain-loader").hide();
 
@@ -635,7 +639,7 @@
                 $("<option>").val(domain.Id).text(domain.Url)
               );
             });
-            scriptText = `<script src="https://app.secureprivacy.ai/script/${response.PagedResults[0].Id}.js"></script>`;
+            scriptText = `<script src="${scriptURL}/${response.PagedResults[0].Id}.js"></script>`;
           } else {
             $("#domain-label").hide();
             $("#input-label").show();
@@ -680,6 +684,9 @@
           domain: domain,
         }),
         success: function (response) {
+          debugger;
+          let domainId = response.Id;
+          assignDomain(domainId);
           console.log("Domain connected successfully:", response);
         },
         error: function (error) {
@@ -688,9 +695,35 @@
       });
     });
 
+
+    function assignDomain(domain) {
+      // Make the AJAX call
+      const apiKey = localStorage.getItem("ApiKey");
+      $.ajax({
+        url: `${apiURL}/api/Domain/assign`,
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + apiKey,
+        },
+        data: JSON.stringify({
+          TemplateIds:["66611f757f3e478bd12677c5","66611f737f3e478bd12677a7","66611f737f3e478bd12677a1","66611f727f3e478bd126779b","66611f727f3e478bd1267795","66611f727f3e478bd126778f","66611f717f3e478bd1267789","66611f717f3e478bd1267783","66611f717f3e478bd126777d","66611f707f3e478bd1267777","66611f707f3e478bd1267771","66611f707f3e478bd126776b","66611f6f7f3e478bd1267765","66611f6f7f3e478bd126775f","66611f6f7f3e478bd1267759","66611f6e7f3e478bd1267753","66611f6e7f3e478bd126774d","66611f6e7f3e478bd1267747","66611f6d7f3e478bd1267741","66611f6d7f3e478bd126773b","66611f6d7f3e478bd1267735","66611f6c7f3e478bd126772f","66611f6c7f3e478bd1267729","66611f6c7f3e478bd1267723","66611f6c7f3e478bd126771d","66611f6b7f3e478bd1267717","66611f6b7f3e478bd1267711","66611f6b7f3e478bd126770b","66611f6a7f3e478bd1267705","66611f6a7f3e478bd12676ff","66611f6a7f3e478bd12676f9","66611f697f3e478bd12676f3","66611f697f3e478bd12676ed","66611f697f3e478bd12676e7","66611f687f3e478bd12676e1","66611f687f3e478bd12676db","66611f687f3e478bd12676d5","66611f677f3e478bd12676cf","66611f677f3e478bd12676c9","66611f677f3e478bd12676c3","66611f667f3e478bd12676bd","66611f667f3e478bd12676b7","66611f667f3e478bd12676b1","66611f657f3e478bd12676ab","66611f657f3e478bd12676a5","66611f657f3e478bd126769f","66611f647f3e478bd1267699","66611f647f3e478bd1267693","66611f647f3e478bd126768d","66611f637f3e478bd1267687","66611f637f3e478bd1267681","66611f637f3e478bd126767b","66611f627f3e478bd1267675"],
+          PolicyIds: ["66611f767f3e478bd12677c7", "66611f767f3e478bd12677c8"],
+          DomainId: domain,
+        }),
+        success: function (response) {
+          console.log("Domain connected successfully:", response);
+        },
+        error: function (error) {
+          console.error("Error connecting domain:", error);
+        },
+      });
+    }
+
+
     $("#domain-select").on("change", function () {
       let selectedId = $(this).val();
-      scriptText = `<script src="https://app.secureprivacy.ai/script/${selectedId}.js"></script>`;
+      scriptText = `<script src="${scriptURL}/${selectedId}.js"></script>`;
     });
     $("#connect-domain").click(function () {
       $("#insert_header").val(scriptText);
