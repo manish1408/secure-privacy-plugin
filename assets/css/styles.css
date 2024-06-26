@@ -72,7 +72,6 @@
 }
 
 .sp_main_section {
-  background: linear-gradient(89.52deg, #24b04b -46.17%, #0263bc 186.99%);
   margin: 0;
   padding: 0;
   width: calc(100% + 21px);
@@ -80,12 +79,16 @@
   font-family: "Sofia Pro", sans-serif;
   left: -21px;
   position: relative;
+  background: url(../img/lines.png);
+  background-color: #f5f5f5;
 }
 .sp_main {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0px 0px 44.6px 4px #9F9F9F14;
+
 }
 
 .sp_main-div {
@@ -158,10 +161,8 @@ form > p:last-child {
 }
 
 .section-1 {
-  background: #eaedf2;
   border-radius: 28px;
   margin: 0px !important;
-  padding: 20px 0px 0px 0px !important;
 }
 @media (max-width: 767px) {
   .section-2 {

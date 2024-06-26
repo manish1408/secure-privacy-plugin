@@ -53,7 +53,7 @@
     });
     $("#new-domain-back").click(function () {
       $("#new-domain-section").hide();
-      $("#signin-section").show();
+      $("#domain-section").show();
     });
 
     $("#show-signup").click(function () {
@@ -168,13 +168,11 @@
             } else {
               isDomainValid = true;
             }
-            // checkRegValidation();
           },
           error: function (error) {
             $("#domain-loader").hide();
             console.error("API error:", error);
             isDomainValid = false;
-            // checkRegValidation();
           },
         });
       } else {
@@ -224,13 +222,11 @@
               isEmailValid = true;
             }
 
-            // checkRegValidation();
           },
           error: function (error) {
             $("#email-loader").hide();
             isEmailValid = false;
             isValid = false;
-            // checkRegValidation();
             console.error("Error:", error);
           },
         });
@@ -239,7 +235,6 @@
         isEmailValid = false;
       }
 
-      // checkRegValidation();
     }
 
     function validatePassword() {
@@ -266,7 +261,6 @@
       $("#password-err").toggle(!isPasswordValid);
       $("#password-err").text(errorMessage);
 
-      // checkRegValidation();
     }
 
     function validateConfirmPassword() {
@@ -296,7 +290,6 @@
       $("#cnf-password-err").toggle(!isConfirmPasswordValid);
       $("#cnf-password-err").text(errorMessage);
 
-      // checkRegValidation();
     }
 
     function validateFirstName() {
@@ -338,64 +331,59 @@
         const email = $("#reg-email").val();
         var atIndex = email.indexOf("@");
         var dotIndex = email.indexOf(".", atIndex);
-        var company =
-          atIndex !== -1 && dotIndex !== -1
-            ? email.substring(atIndex + 1, dotIndex)
-            : "";
-        console.log(company);
+        var company = atIndex !== -1 && dotIndex !== -1 ? email.substring(atIndex + 1, dotIndex) : "";
 
-        $("#reg-company").val(company);
-        $("#signup-form").hide();
-        $("#signup-form-title").hide();
-        $("#signup-section-next").show();
+
+        let firstName = $("#reg-firstName").val();
+        let lastName = $("#reg-lastName").val();
+        let businessEmail = $("#reg-email").val();
+        let password = $("#reg-password").val();
+        let confirmPassword = $("#reg-cnfPassword").val();
+        let domain = $("#reg-domain").val();
+
+        let data = {
+          isV2: true,
+          pluginName: "Wordpress",
+          firstName: firstName,
+          lastName: lastName,
+          businessEmail: businessEmail,
+          companyName: company,
+          password: password,
+          confirmPassword: confirmPassword,
+          domain: domain,
+        };
+        
+        $("#reg-text").hide();
+        $("#signup-loader").show();
+
+        $.ajax({
+          url: `${apiURL}/api/onboarding/plugin`,
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(data),
+          success: function (response) {
+            $("#reg-text").show();
+            $("#signup-loader").hide();
+            console.log(response);
+            if (response) {
+              $("#signup-section").hide();
+              $("#signup-err").hide();
+              $("#verify-msg").show();
+            } else {
+              $("#signup-err").show();
+              $("#signup-err").text(response.ResponseStatus.Message);
+            }
+          },
+          error: function (error) {
+            $("#reg-text").show();
+            $("#signup-loader").hide();
+            console.error("Error:", error);
+          },
+        });
+
+
       }
     });
-    let isPositionValid = false;
-    let isCompanyValid = false;
-    let isEmployesValid = false;
-    let isCountryValid = false;
-    function validateNextForm() {
-      let position = $("#reg-position").val();
-      let company = $("#reg-company").val();
-      let employees = $("#reg-employee-select").val();
-      let country = $("#country-select").val();
-      let errorMessagePosition = "";
-      let errorMessageCompany = "";
-      let errorMessageEmployees = "";
-      let errorMessageCountry = "";
-      if (position !== "") {
-        isPositionValid = true;
-      } else {
-        isPositionValid = false;
-        errorMessagePosition = "Position is required.";
-      }
-      $("#position-err").toggle(!isPositionValid);
-      $("#position-err").text(errorMessagePosition);
-      if (company !== "") {
-        isCompanyValid = true;
-      } else {
-        isCompanyValid = false;
-        errorMessageCompany = "Company is required.";
-      }
-      $("#company-err").toggle(!isPositionValid);
-      $("#company-err").text(errorMessageCompany);
-      if (employees !== "") {
-        isEmployesValid = true;
-      } else {
-        isEmployesValid = false;
-        errorMessageEmployees = "Select number of employees.";
-      }
-      $("#employees-err").toggle(!isEmployesValid);
-      $("#employees-err").text(errorMessageEmployees);
-      if (country !== "") {
-        isCountryValid = true;
-      } else {
-        isCountryValid = false;
-        errorMessageCountry = "Select company HQ country";
-      }
-      $("#country-err").toggle(!isCountryValid);
-      $("#country-err").text(errorMessageCountry);
-    }
 
     function checkRegValidation() {
       validateLastName();
@@ -412,107 +400,11 @@
         isPasswordValid &&
         isConfirmPasswordValid
       ) {
-        // $("#next-button").prop("disabled", false);
         return true;
       } else {
-        // $("#next-button").prop("disabled", true);
         return false;
       }
     }
-
-    $("#employee-select,#reg-company,#reg-position,#country-select").on(
-      "input"
-      // checkRegValidationNext
-    );
-
-    function checkRegValidationNext() {
-      let position = $("#reg-position").val();
-      let company = $("#reg-company").val();
-      let employeeSelect = $("#reg-employee-select").val();
-      let countrySelect = $("#country-select").val();
-
-      if (
-        position !== "" &&
-        company !== "" &&
-        employeeSelect !== "" &&
-        countrySelect !== ""
-      ) {
-        $("#signup-button").prop("disabled", false);
-      } else {
-        $("#signup-button").prop("disabled", true);
-      }
-    }
-
-    $("#signup-section-next").submit(function (e) {
-      e.preventDefault();
-      validateNextForm();
-      if (
-        isPositionValid &&
-        isCompanyValid &&
-        isEmployesValid &&
-        isCountryValid
-      ) {
-        // showLoading();
-        $("#reg-text").hide();
-        $("#signup-loader").show();
-        let firstName = $("#reg-firstName").val();
-        let lastName = $("#reg-lastName").val();
-        let businessEmail = $("#reg-email").val();
-        let password = $("#reg-password").val();
-        let confirmPassword = $("#reg-cnfPassword").val();
-        let position = $("#reg-position").val();
-        let companyName = $("#reg-company").val();
-        let numberOfEmployees = $("#reg-employee-select").val();
-        let countryCode = $("#country-select").val();
-        let domain = $("#reg-domain").val();
-
-        let data = {
-          isV2: true,
-          planId: null,
-          currency: null,
-          interval: null,
-          firstName: firstName,
-          lastName: lastName,
-          businessEmail: businessEmail,
-          companyName: companyName,
-          position: position,
-          numberOfEmployees: numberOfEmployees,
-          password: password,
-          confirmPassword: confirmPassword,
-          domains: [domain],
-          countryCode,
-        };
-        console.log(data);
-
-        $.ajax({
-          url: `${apiURL}/api/onboarding/register`,
-          method: "POST",
-          contentType: "application/json",
-          data: JSON.stringify(data),
-          success: function (response) {
-            $("#reg-text").show();
-            $("#signup-loader").hide();
-
-            console.log(response);
-            if (response) {
-              $("#signup-err").hide();
-              $("#v-email").text(businessEmail);
-              $("#signup-section-next").hide();
-              $("#verify-msg").show();
-            } else {
-              $("#signup-err").show();
-              $("#signup-err").text(response.ResponseStatus.Message);
-            }
-          },
-          error: function (error) {
-            $("#reg-text").show();
-            $("#signup-loader").hide();
-            console.error("Error:", error);
-          },
-        });
-      }
-    });
-    // Register Ends
 
     // Add New Domain Starts
 
@@ -586,7 +478,6 @@
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (response) {
-          debugger;
           let domainId = response.Id;
           assignDomain(domainId);
           $("#add-domain-text").show();
@@ -684,7 +575,6 @@
           domain: domain,
         }),
         success: function (response) {
-          debugger;
           let domainId = response.Id;
           assignDomain(domainId);
           console.log("Domain connected successfully:", response);
@@ -745,6 +635,7 @@
 
     $("#sp_change_settings").on("click", function (e) {
       e.preventDefault();
+      window.open("https://cmp.secureprivacy.ai/login");
     });
 
     const COUNTRIES = [

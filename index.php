@@ -33,23 +33,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 define('SECUREPRIVACY_PLUGIN_DIR',str_replace('\\','/',dirname(__FILE__)));
 
 
+// Define the function to add a settings link
+function my_custom_plugin_settings_link($links) { 
+	// Build your settings link
+	$settings_link = '<a href="options-general.php?page=sp%2Findex.php">Settings</a>';
+	$help_link = '<a href="https://support.secureprivacy.ai" target="_blank">Help</a>';
+	
+	// Add the settings link to the front of the array
+	array_unshift($links, $settings_link); 
+	array_unshift($links, $help_link); 
+	
+	return $links; 
+  }
+  
+// Add the settings link to the plugin action links
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'my_custom_plugin_settings_link');
 
 if ( !class_exists( 'SecurePrivacyPlugin' ) ) {
 
 	class SecurePrivacyPlugin {
 
 		function __construct() {
-			// add_action( 'admin_init', 'style-css');
-			// add_action( 'admin_init', 'bootstrap-js' );
-			// add_action( 'admin_init', 'jquery');
-			// add_action( 'admin_init', 'signin-js' );
 			add_action( 'init', array( &$this, 'init' ) );
 			add_action( 'admin_init', array( &$this, 'admin_init' ) );
 			add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 			add_action( 'wp_head', array( &$this, 'wp_head' ), -99999999999999999999999999999 );
-		
-
-
 		}
 
 		function init() {

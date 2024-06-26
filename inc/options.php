@@ -14,11 +14,6 @@
   <div class="sp_main-div">
     <div class="row g-0">
       <div class="col-sm-12 col-md-5 section-1">
-        <div class="text-center">
-          <img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . '/assets/img/sp-logo-white.svg'; ?>" />
-          <h1 id="signin-title">Welcome Back!</h1>
-          <h1 id="signup-title" style="display:none">Join Us on Privacy-First Journey</h1>
-        </div>
         <div class="d-flex justify-content-center align-items-center">
           <img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . '/assets/img/section-image.png'; ?>" class="section-image" />
         </div>
@@ -150,100 +145,36 @@
               <p class="text-danger mt-1 mb-0" id="cnf-password-err" style="color: red; display: none;"></span>
             </div>
           </div>
-           
             <button class="btn btn-sp mb-3" id="next-button">
-
-            <span id="signup-text">NEXT</span>
-         
-         <div class="spinner-border spinner-border-sm text-white" role="status" id="loader" style="display: none;">
-           <span class="visually-hidden">Loading...</span>
-         </div>
+              <span id="reg-text">SIGN UP</span>
+              <div class="spinner-border spinner-border-sm text-white" role="status" id="signup-loader" style="display: none;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </button>
+            <p class="text-danger mb-0" id='signup-err' style='display:hidden;margin-bottom:0'></p>
             <p class="text-center">
               Already have an account?
               <span class="sign-span" id="show-signin">Sign in now</span>
             </p>
         </form> 
-          <form id="signup-section-next" style="display:none">
-            <div class="d-flex justify-content-between gap-2">
-              <div class="d-flex flex-column fname w-100 mb-3">
-                <label>Your position<span> * </span></label>
-                <input
-                  type="text"
-                  placeholder="Your position"
-                  class="input-field"
-                  name="position"
-                  id="reg-position"
-                />
-                <p class="text-danger mt-1 mb-0" id='position-err' style='display:hidden;margin-bottom:0'></p>
-              </div>
-              <div class="d-flex flex-column w-100 mb-3">
-                <label>Your company<span> * </span></label>
-                <input
-                  type="text"
-                  placeholder="Your company"
-                  class="input-field"
-                  name="company"
-                  id="reg-company"
-                />
-                <p class="text-danger mt-1 mb-0" id='company-err' style='display:hidden;margin-bottom:0'></p>
-
-              </div>
-            </div>
-            <div class="d-flex justify-content-between gap-2">
-           
-              <div class="d-flex flex-column fname w-50 mb-3">
-                <label>Number of employees<span> * </span></label>
-                <select id="reg-employee-select" class="input-field" style="max-width: 100%;">
-                <option value="">Select from the list</option>
-                  <option value="1-200">1 - 200</option>
-                  <option value="201-5000">201 - 5000</option>
-                  <option value=">5000"> >5000</option>
-                </select>
-                <p class="text-danger mt-1 mb-0" id='employees-err' style='display:hidden;margin-bottom:0'></p>
-
-              </div>
-              <div class="d-flex flex-column fname w-50 mb-3">
-                <label>Company HQ country<span> * </span></label>
-                <select id="country-select" class="input-field" >
-                <option value="">Select from the list</option>
-                </select>
-                <p class="text-danger mt-1 mb-0" id='country-err' style='display:hidden;margin-bottom:0'></p>
-
-              </div>
-            </div>
-            <p class="text-danger mb-0" id='signup-err' style='display:hidden;margin-bottom:0'></p>
-            <div class="d-flex justify-content-between gap-2">
-              <div class="d-flex flex-column cta w-100">
-                <button class="btn btn-deactive mb-3" id="signup-back-button"><span>BACK</span></button></div>
-              <div class="d-flex flex-column fname w-100">
-                <button class="btn btn-sp mb-3" id="signup-button">
-                  <span id="reg-text">SIGN UP</span>
-                  <div class="spinner-border spinner-border-sm text-white" role="status" id="signup-loader" style="display: none;">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </form>
-        
+     
         </section>
 
         <!-- Verify email -->
-      <section id='verify-msg' class='validate-section' style='display:none'>
-        <h1>Validate account</h1>
-        <div>
-          We have sent a verification link to <span id='v-email'></span> Please check your inbox.
-          <br/>
-          If you didn't receive a verification link, <span class='span-click' id='resend-email'>click here</span> to resend.
-          <br/>
-          If you want to change your email address, <span class='span-click' id='change-email'>click here</span> to change your email.
-        </div>
-        <button class="btn btn-sp mb-3" id="verify-msg-btn">
-          <span id="signup-text"> BACK TO SIGN IN</span>
-        </button>
-      </section>
 
+        <section class="success-section" id='verify-msg' style="display:none">
+          <img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . '/assets/icon/check-circle.svg'; ?>" style="height: 64px" />
+          <h2 class="mt-4">
+          Account created successfully.
+          </h2>
+          <div class="d-flex justify-content-between w-100 cta">
+            <button class="btn btn-sp mb-3" id="verify-msg-btn">
+              <span id="signup-text"> BACK TO SIGN IN</span>
+            </button>
+          </div>
+        </section>
+
+      
         <!-- Domain style="display:none" -->
         <section id="domain-section" style="display:none"  >
         <h1>Add Your <span style="color: #07806d">domain</span></h1>
@@ -273,6 +204,7 @@
            
           </form>
         </section>
+
         <!-- New Domain section  -->
         <section id="new-domain-section" style="display:none">
         <h1>Add new <span style="color: #07806d">domain</span></h1>
@@ -298,9 +230,9 @@
                 <span class="visually-hidden">Loading...</span>
               </div>
             </button>
-            <!-- <p class="text-center" id="new-domain-back" style="display:none">
-              <span class="sign-span" >Back to login</span>
-            </p> -->
+            <p class="text-center" id="new-domain-back" >
+              <span class="sign-span" >Go Back</span>
+            </p>
           </form>
         </section>
         <section class="success-section" id="success-section" style="display:none">
